@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<db id="1" name="37">
+		<url>jdbc:oracle:thin:@10.71.32.37:1521:devdb</url>
+		<user>zhcpb_srmtest</user>
+		<password>zhcpb_srmtest</password>
+	</db>
+	<db id="2" name="12">
+		<url>jdbc:oracle:thin:@10.71.31.12:1521:orcl</url>
+		<user>kyxt_zsdx</user>
+		<password>kyxt_zsdx</password>
+	</db>
+	
+</root>
