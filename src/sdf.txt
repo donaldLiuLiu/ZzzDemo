@@ -1,1 +1,9 @@
 hello
+
+bug.txt
+
+
+
+
+conf.properties
+E:\\ZzzDemo\\conf.properties

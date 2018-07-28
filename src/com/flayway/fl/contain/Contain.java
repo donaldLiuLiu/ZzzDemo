@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESKeySpec;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -26,7 +24,6 @@ import com.flayway.fl.utils.FlBugPro;
 import com.flayway.fl.utils.FlReadProp;
 import com.flayway.fl.utils.FlReadXml;
 import com.flayway.fl.utils.StringUtils;
-import com.sun.crypto.provider.AESKeyGenerator;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
@@ -78,18 +75,21 @@ public class Contain {
 					BASE64Encoder ee = new BASE64Encoder();
 					BASE64Decoder dd = new BASE64Decoder();
 					byte b[] = dd.decodeBuffer(StringUtils.transforToString(FlReadProp.getPropByKey("conf.ysmyc")));
+					String bm = StringUtils.transforToString(FlReadProp.getPropByKey("conf.bm"));
 					String sf = StringUtils.transforToString(FlReadProp.getPropByKey("conf.sf"));
 					int keySize = Integer.parseInt(StringUtils.transforToString(FlReadProp.getPropByKey("conf.size")));
+					SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+					secureRandom.setSeed(b);
 					KeyGenerator keyGenerator = KeyGenerator.getInstance(sf);
-					keyGenerator.init(keySize, new SecureRandom(b));
+					keyGenerator.init(keySize, secureRandom);
 					SecretKey secretKey = keyGenerator.generateKey();
-					Cipher cipher = Cipher.getInstance(StringUtils.transforToString(FlReadProp.getPropByKey("conf.sf")));
+					Cipher cipher = Cipher.getInstance(sf);
 					cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-					byte[] result = cipher.doFinal(inputText.getBytes(StringUtils.transforToString(FlReadProp.getPropByKey("conf.bm"))));
+					byte[] result = cipher.doFinal(inputText.getBytes(bm));
 					outputText = ee.encode(result);
 				} catch(Exception ex) {
 					try {
-						FlBugPro.writeBug(FlReadXml.class, 
+						FlBugPro.writeBug(Contain.class, 
 								Contain.class.getMethod("start", new Class<?>[]{}), ex);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -109,20 +109,23 @@ public class Contain {
 				String outputText = null;
 				try {
 					BASE64Decoder dd = new BASE64Decoder();
-					String sf = StringUtils.transforToString(FlReadProp.getPropByKey("conf.sf"));
 					byte b[] = dd.decodeBuffer(StringUtils.transforToString(FlReadProp.getPropByKey("conf.ysmyc")));
+					String bm = StringUtils.transforToString(FlReadProp.getPropByKey("conf.bm"));
+					String sf = StringUtils.transforToString(FlReadProp.getPropByKey("conf.sf"));
 					int keySize = Integer.parseInt(StringUtils.transforToString(FlReadProp.getPropByKey("conf.size")));
+					SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+					secureRandom.setSeed(b);
 					KeyGenerator keyGenerator = KeyGenerator.getInstance(sf);
-					keyGenerator.init(keySize, new SecureRandom(b));
+					keyGenerator.init(keySize, secureRandom);
 					SecretKey secretKey = keyGenerator.generateKey();
 					Cipher cipher = Cipher.getInstance(sf);
 					cipher.init(Cipher.DECRYPT_MODE, secretKey);
 					byte[] result = dd.decodeBuffer(inputText);
 					byte[] reResult = cipher.doFinal(result);
-					outputText = new String(reResult, StringUtils.transforToString(FlReadProp.getPropByKey("conf.bm")));
+					outputText = new String(reResult, bm);
 				} catch(Exception ex) {
 					try {
-						FlBugPro.writeBug(FlReadXml.class, 
+						FlBugPro.writeBug(Contain.class, 
 								Contain.class.getMethod("start", new Class<?>[]{}), ex);
 					} catch (Exception e1) {
 						e1.printStackTrace();
